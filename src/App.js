@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Container, AppBar, Typography, Grow, Grid } from "@material-ui/core";
 import { useDispatch } from "react-redux";
@@ -9,28 +9,24 @@ import Form from "./components/Form/Form";
 import memories from "./images/memories.png";
 import useStyles from "./styles";
 const App = () => {
+    const [currentId, setCurrentId] = useState(null);
     const classes = useStyles();
-    const dispathch = useDispatch();
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        dispathch(getPosts());
-    }, []);
+        dispatch(getPosts());
+    }, [currentId]);
+    console.log("Check app render:");
     return (
         <Container maxWidth="lg">
-            <AppBar className={classes.appBar} position="static" color="inherit">
-                <Typography className={classes.heading} variant="h2" align="center">
-                    Memories
-                </Typography>
-                <img className={classes.image} src={memories} alt="Memories" height="60" width="60"></img>
-            </AppBar>
             <Grow in>
                 <Container>
-                    <Grid container justifyContent="space-between" alignItems="stretch" spacing={3}>
+                    <Grid container className={classes.mainContainer} justifyContent="space-between" alignItems="stretch" spacing={3}>
                         <Grid item xs={12} sm={7}>
-                            <Posts />
+                            <Posts setCurrentId={setCurrentId} />
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <Form />
+                            <Form currentId={currentId} setCurrentId={setCurrentId} />
                         </Grid>
                     </Grid>
                 </Container>
