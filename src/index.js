@@ -14,11 +14,11 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 const store = createStore(reducers, compose(applyMiddleware(thunk)));
 
 ReactDOM.render(
-    <GoogleOAuthProvider clientId="845951462549-s21gnijajo9b813a49n8dib2064mcmeq.apps.googleusercontent.com">
-        <Provider store={store}>
+    <Provider store={store}>
+        <GoogleOAuthProvider clientId="845951462549-s21gnijajo9b813a49n8dib2064mcmeq.apps.googleusercontent.com">
             <App />
-        </Provider>
-    </GoogleOAuthProvider>,
+        </GoogleOAuthProvider>
+    </Provider>,
     document.getElementById("root")
 );
 

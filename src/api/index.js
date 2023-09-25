@@ -1,23 +1,25 @@
 import axios from "axios";
 
-const url = "http://localhost:5000/posts";
+const API = axios.create({ baseURL: "http://localhost:5000" });
 
-export const fetchPosts = () => {
-    return axios.get(url);
-};
+// Middleware add token to header with each request
 
-export const createPost = (newPost) => {
-    return axios.post(url, newPost);
-};
+API.interceptors.request.use((req) => {
+    if (localStorage.getItem("profile")) {
+        req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem("profile")).token}`;
+    }
+    return req;
+});
 
-export const updatePost = (id, updatedPost) => {
-    return axios.patch(`${url}/${id}`, updatedPost);
-};
+// const url = "http://localhost:5000/posts";// previpous syntax
 
-export const deletePost = (id) => {
-    return axios.delete(`${url}/${id}`);
-};
+export const fetchPosts = () => API.get("/posts");
 
-export const likePost = (id) => {
-    return axios.patch(`${url}/${id}/likePost`);
-};
+// export const createPost = (newPost) => axios.post(url, newPost); // previpous syntax
+export const createPost = (newPost) => API.post("/posts", newPost);
+export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updatedPost);
+export const deletePost = (id) => API.delete(`/posts/${id}`);
+export const likePost = (id) => API.patch(`/posts/${id}/likePost`);
+
+export const signin = (formData) => API.post("/users/signin", formData);
+export const signup = (formData) => API.post("/users/signup", formData);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import FileBase from "react-file-base64";
 import { useDispatch } from "react-redux";
@@ -9,57 +9,65 @@ import { createPost, updatePost } from "../../actions/posts";
 
 // Get the current id
 const Form = ({ currentId, setCurrentId }) => {
-    console.log("From render");
-    const [postData, setPostData] = useState({ creator: "", title: "", message: "", tags: "", selectedFile: "" });
+    const [postData, setPostData] = useState({ title: "", message: "", tags: "", selectedFile: "" });
     const post = useSelector((state) => (currentId ? state.posts.find((p) => p._id === currentId) : null));
     const classes = useStyles();
     const dispatch = useDispatch();
+    const inputRef = useRef(null);
+    const user = JSON.parse(localStorage.getItem("profile"));
 
     useEffect(() => {
+        console.log("Check post in form", post);
         if (post) {
             setPostData(post);
         }
     }, [post]);
-
     const handleSubmit = (e) => {
-        let isAllowSubmit = validate();
-        if (isAllowSubmit) {
-            e.preventDefault();
-            if (currentId) {
-                dispatch(updatePost(currentId, postData));
-                setTimeout(() => {
-                    setCurrentId(null);
-                    clear();
-                }, 1000);
-            } else {
-                dispatch(createPost(postData));
+        e.preventDefault();
+        if (currentId) {
+            dispatch(updatePost(currentId, { ...postData, name: user?.name, createAt: new Date().toString() }));
+            setTimeout(() => {
+                setCurrentId(null);
                 clear();
-            }
+            }, 500);
+        } else {
+            // Check here
+            dispatch(createPost({ ...postData, name: user?.name || user?.result.name, createdAt: new Date() }));
+            clear();
         }
     };
-    const validate = () => {
-        let isAllowSubmit = true;
-        if (!postData.creator) {
-            alert("Please fill creator field!");
-            isAllowSubmit = false;
-        }
-        return isAllowSubmit;
-    };
+
     const clear = () => {
-        setPostData({ creator: "", title: "", message: "", tags: "", selectedFile: "" });
+        inputRef.current.value = null;
+        setPostData({ title: "", message: "", tags: "" });
+    };
+
+    if (!user?.name && !user?.result?.name) {
+        return (
+            <Paper className={classes.paper}>
+                <Typography variant="h5" color="primary">
+                    Please Sign In to create your own memories and like orther's memories
+                </Typography>
+            </Paper>
+        );
+    }
+    const toBase64 = (file) =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+        });
+    const handleChangeFile = async (e) => {
+        let file = e.target.files[0];
+        const result = await toBase64(file);
+        setPostData({ ...postData, selectedFile: result });
     };
     return (
         <Paper className={classes.paper}>
             <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
                 <Typography variant="h6">{currentId ? "Editing" : "Creating"} a Memory</Typography>
-                <TextField
-                    name="creator"
-                    variant="outlined"
-                    label="Creator"
-                    fullWidth
-                    value={postData.creator}
-                    onChange={(e) => setPostData({ ...postData, creator: e.target.value })}
-                />
+
                 <TextField
                     name="title"
                     variant="outlined"
@@ -85,11 +93,7 @@ const Form = ({ currentId, setCurrentId }) => {
                     onChange={(e) => setPostData({ ...postData, tags: e.target.value.split(",") })}
                 />
                 <div className={classes.fileInput}>
-                    <FileBase
-                        type="file"
-                        multiple={false}
-                        onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })}
-                    />
+                    <input ref={inputRef} type="file" onChange={handleChangeFile} />
                 </div>
                 <Button
                     className={classes.buttonSubmit}

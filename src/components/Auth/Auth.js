@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Avatar, Button, Container, Grid, Paper, Typography } from "@material-ui/core";
 import LockOutLinedIcon from "@material-ui/icons/LockOutlined";
-import { useGoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin, GoogleLogin, useGoogleOneTapLogin } from "@react-oauth/google";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
 import { useHistory } from "react-router-dom";
 
 import { signIn, signUp } from "../../actions/auth";
@@ -20,7 +21,7 @@ export const Auth = () => {
     const [isSignUp, setIsSignUp] = useState(false);
 
     const [user, setUser] = useState(null);
-    const [profile, setProfile] = useState([]);
+    const [profile, setProfile] = useState({});
     const [formData, setFormData] = useState(initilState);
     const dispatch = useDispatch();
     const history = useHistory();
@@ -42,32 +43,23 @@ export const Auth = () => {
         setIsSignUp(!isSignUp);
     };
 
-    const handleLogin = useGoogleLogin({
-        onSuccess: (codeResponse) => setUser(codeResponse),
-        onError: (error) => console.log("Login Failed:", error),
-    });
-    useEffect(() => {
-        if (user) {
-            axios
-                .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user?.access_token}`, {
-                    headers: {
-                        Authorization: `Bearer ${user?.access_token}`,
-                        Accept: "application/json",
-                    },
-                })
-                .then((res) => {
-                    setProfile(res.data);
-                    dispatch({ type: AUTH, data: res.data });
-                    history.push("/");
-                })
-                .catch((err) => console.log(err));
-        }
-    }, [user]);
-
+    const onSuccess = (credentialResponse) => {
+        const credentialResponseDecode = jwtDecode(credentialResponse.credential);
+        setProfile({ ...credentialResponseDecode, token: credentialResponse.credential });
+        dispatch({
+            type: AUTH,
+            data: {
+                ...credentialResponseDecode,
+                token: credentialResponse.credential,
+            },
+        });
+        history.push("/");
+    };
     const handleChange = (e) => {
         let fieldName = e.target.name;
         setFormData({ ...formData, [fieldName]: e.target.value });
     };
+    console.log("Check profile", profile);
     return (
         <Container component="main" maxWidth="xs">
             <Paper className={classes.paper} elevation={3}>
@@ -105,15 +97,19 @@ export const Auth = () => {
                     <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                         {isSignUp ? "Sign Up" : "Sign In"}
                     </Button>
-                    <Button variant="contained" color="secondary" fullWidth onClick={handleLogin}>
-                        {<Icon />} &nbsp; Sign in with Google
-                    </Button>
-
-                    <Grid container justifyContent="flex-end">
+                    <Grid container direction="row" justifyContent="center" alignItems="center">
+                        <GoogleLogin
+                            onSuccess={onSuccess}
+                            onError={() => {
+                                console.log("Login Failed");
+                            }}
+                        />
+                    </Grid>
+                    <Grid container justifyContent="flex-end" className={classes.magin}>
                         <Grid item>
-                            <Button onClick={switchMode}>
+                            <Typography className={classes.hover} color="primary" onClick={switchMode}>
                                 {isSignUp ? "Already have an account? Sign In?" : "Don't have an account? Sign Up?"}
-                            </Button>
+                            </Typography>
                         </Grid>
                     </Grid>
                 </form>
