@@ -13,7 +13,9 @@ API.interceptors.request.use((req) => {
 
 // const url = "http://localhost:5000/posts";// previpous syntax
 
-export const fetchPosts = () => API.get("/posts");
+export const fetchPosts = (page) => API.get(`/posts?page=${page}`);
+export const fetchPostsBySearch = (searchQuery) =>
+    API.get(`/posts/search?searchQuery=${searchQuery.search || "none"}&tags=${searchQuery.tags}`);
 
 // export const createPost = (newPost) => axios.post(url, newPost); // previpous syntax
 export const createPost = (newPost) => API.post("/posts", newPost);
