@@ -8,6 +8,7 @@ import { getPosts } from "../actions/posts";
 import useStyles from "./styles";
 const Paginate = ({ page }) => {
     const { numberOfPages } = useSelector(state => state.posts);
+
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -19,6 +20,7 @@ const Paginate = ({ page }) => {
     return (
         <Pagination
             classes={{ ul: classes.ul }}
+            count={numberOfPages}
             page={Number(page) || 1}
             variant="outlined"
             color="primary"

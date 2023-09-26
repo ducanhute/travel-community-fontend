@@ -5,7 +5,7 @@ import moment from "moment";
 import { useParams, useHistory } from "react-router-dom";
 
 import useStyles from "./styles";
-import { getPost } from "../../actions/posts";
+import { getPost, fetchPostsBySearch } from "../../actions/posts";
 
 const PostDetails = () => {
     const { post, posts, isLoading } = useSelector((state) => state.posts)
@@ -18,6 +18,10 @@ const PostDetails = () => {
         dispatch(getPost(id))
     }, [id])
 
+    useEffect(() => {
+        dispatch(fetchPostsBySearch({ search: "none", tags: post?.tags.join(',') }))
+    }, [id])
+
     if (!post) return null
 
     if (isLoading) {
@@ -25,6 +29,11 @@ const PostDetails = () => {
             <CircularProgress size="7em" />
         </Paper>)
     }
+    const recommendPosts = posts.filter(({ _id }) => _id !== post.id);
+    console.log("Check recommendPosts", recommendPosts)
+
+    const openPost = (_id) => history.push(`/posts/${_id}`)
+
     return <Paper style={{ padding: "20px", borderRadius: "15px" }} evaluation={6} >
         <div className={classes.card}>
             <div className={classes.section}>
@@ -43,6 +52,24 @@ const PostDetails = () => {
                 <img className={classes.media} src={post.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'} alt={post.title} />
             </div>
         </div>
+        {recommendPosts.length && (
+            <div className={classes.section}>
+                <Typography gutterBottom variant="h5">You might also like: </Typography>
+                <Divider />
+                <div className={classes.recommendedPosts}>
+                    {recommendPosts.map(({ title, message, name, likes, selectedFile, _id }) => (
+                        <Paper evaluation={6} style={{ margin: "20px", cursor: "pointer" }} onClick={() => { openPost(_id) }} key={_id}>
+                            <Typography gutterBottom variant="h6">{title}</Typography>
+                            <Typography gutterBottom variant="subtitle2">{name}</Typography>
+                            <Typography gutterBottom variant="subtitles">{message}</Typography>
+                            <Typography gutterBottom variant="subtitle1">Likes: {likes.length}</Typography>
+                            <img src={selectedFile} width='200px' />
+
+                        </Paper>
+                    ))}
+                </div>
+            </div>
+        )}
     </Paper>;
 };
 export default PostDetails;
