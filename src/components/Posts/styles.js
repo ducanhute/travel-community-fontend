@@ -4,6 +4,10 @@ export default makeStyles((theme) => ({
   mainContainer: {
     display: 'flex',
     alignItems: 'center',
+    // [theme.breakpoints.up('md')]: {
+    // height: '90vh',
+    // overflow: 'scroll',
+    // },
   },
   smMargin: {
     margin: theme.spacing(1),

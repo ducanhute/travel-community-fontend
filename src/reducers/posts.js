@@ -13,7 +13,7 @@ export default (state = { isLoading: true, posts: [] }, action) => {
         numberOfPages: action.payload.numberOfPages,
       };
     case DELETE:
-      return { ...state, posts: state.posts.filter((post) => post.id !== action.payload) };
+      return { ...state, posts: state.posts.filter((post) => post._id !== action.payload) };
     case FETCH_BY_SEARCH:
       return { ...state, posts: action.payload };
     case FETCH_POST:
@@ -25,7 +25,7 @@ export default (state = { isLoading: true, posts: [] }, action) => {
         posts: state.posts.map((post) => (post._id === action.payload._id ? action.payload : post)),
       };
     case CREATE:
-      return { ...state, posts: [...state.posts, action.payload] };
+      return { ...state, posts: [action.payload, ...state.posts.slice(0, 3)] };
     default:
       return state;
   }

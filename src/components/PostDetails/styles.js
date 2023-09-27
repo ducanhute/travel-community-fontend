@@ -9,6 +9,7 @@ export default makeStyles((theme) => ({
   },
   card: {
     display: 'flex',
+    alignItems: 'center',
     width: '100%',
     [theme.breakpoints.down('sm')]: {
       flexWrap: 'wrap',
@@ -22,8 +23,12 @@ export default makeStyles((theme) => ({
   },
   imageSection: {
     marginLeft: '20px',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.up('md')]: {
+      width: '50%',
+    },
+    [theme.breakpoints.down('md')]: {
       marginLeft: 0,
+      with: '100%',
     },
   },
   recommendedPosts: {

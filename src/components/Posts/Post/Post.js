@@ -24,7 +24,11 @@ const Post = ({ post, setCurrentId }) => {
         <>
           <ThumbUpAlt />
           &nbsp;
-          {post.likes.length > 2 ? `You and ${post.likes.length - 1} others` : `${post.likes.length} like${post.likes.length > 1 ? 's' : ''}`}
+          {post.likes.length > 2 ? (
+            <span style={{ fontSize: '8px' }}>You and {post.likes.length - 1} others </span>
+          ) : (
+            `${post.likes.length} like${post.likes.length > 1 ? 's' : ''}`
+          )}
         </>
       ) : (
         <>
@@ -45,10 +49,12 @@ const Post = ({ post, setCurrentId }) => {
   return (
     <Card className={classes.card} elevation={3}>
       <div className='wrap-card' onClick={handleCardAction} style={{ cursor: 'pointer' }}>
-        <CardMedia className={classes?.media} image={post?.selectedFile} title={post?.title} />
+        <CardMedia className={classes.media} image={post?.selectedFile} title={post?.title} />
         <div className={classes.overlay}>
           <Typography variant='h6'>{post.name}</Typography>
-          <Typography variant='body2'>{moment(post.createdAt).fromNow()}</Typography>
+          <Typography variant='body2' style={{ fontSize: '10px', fontStyle: 'italic' }}>
+            {moment(post.createdAt).fromNow()}
+          </Typography>
         </div>
         <div className={classes.overlay2}>
           {(post.creator === user?.sub || post.creator === user?.result?._id) && (
@@ -63,16 +69,19 @@ const Post = ({ post, setCurrentId }) => {
           )}
         </div>
         <div className={classes.details}>
-          <Typography variant='body2' color='textSecondary'>
+          <Typography style={{ fontSize: '12px' }} variant='body2' color='textSecondary'>
             {post.tags.map((tag) => `#${tag} `)}
           </Typography>
         </div>
-        <CardContent>
-          <Typography className={classes.title} variant='h5' style={{ padding: 0 }} gutterBottom>
+        <CardContent className={classes.cardContTent}>
+          <Typography className={classes.title} variant='h6' style={{ padding: 0 }} gutterBottom>
             {post.title}
           </Typography>
-          <Typography variant='body2' color='textSecondary' component='p' gutterBottom>
+          <Typography className={classes.message} variant='body2' color='textSecondary' component='p' gutterBottom>
             {post.message}
+          </Typography>
+          <Typography variant='subtitle2' color='primary'>
+            More details....
           </Typography>
         </CardContent>
       </div>
@@ -90,13 +99,13 @@ const Post = ({ post, setCurrentId }) => {
         {(post.creator === user?.result?._id || post.creator === user?.sub) && (
           <Button
             size='small'
+            style={{ fontSize: '12px' }}
             color='primary'
             onClick={() => {
               dispatch(deletePost(post._id));
               setCurrentId(`${post._id}-`);
             }}>
-            <DeleteIcon fontSize='small' />
-            Delete
+            <DeleteIcon fontSize='medium' />
           </Button>
         )}
       </CardActions>

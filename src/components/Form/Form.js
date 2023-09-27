@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { TextField, Button, Typography, Paper } from '@material-ui/core';
+import { TextField, Button, Typography, Paper, Grid } from '@material-ui/core';
 import FileBase from 'react-file-base64';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -44,7 +44,7 @@ const Form = ({ currentId, setCurrentId }) => {
   if (!user?.name && !user?.result?.name) {
     return (
       <Paper className={classes.paper}>
-        <Typography variant='h5' color='primary'>
+        <Typography align='center' variant='h6' color='secondary'>
           Please Sign In to create your own memories and like other's memories
         </Typography>
       </Paper>
@@ -67,6 +67,7 @@ const Form = ({ currentId, setCurrentId }) => {
       <form autoComplete='off' noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
         <Typography variant='h6'>{currentId ? 'Editing' : 'Creating'} a Memory</Typography>
         <TextField
+          size='small'
           name='title'
           variant='outlined'
           label='Title'
@@ -83,6 +84,7 @@ const Form = ({ currentId, setCurrentId }) => {
           onChange={(e) => setPostData({ ...postData, message: e.target.value })}
         />
         <TextField
+          size='small'
           name='tags'
           variant='outlined'
           label='Tags'
@@ -93,12 +95,14 @@ const Form = ({ currentId, setCurrentId }) => {
         <div className={classes.fileInput}>
           <input ref={inputRef} type='file' onChange={handleChangeFile} />
         </div>
-        <Button className={classes.buttonSubmit} variant='contained' color='primary' size='large' type='submit' fullWidth>
-          Submit
-        </Button>
-        <Button variant='contained' color='secondary' size='small' onClick={clear} fullWidth>
-          Clear
-        </Button>
+        <Grid container alignItems='center' justifyContent='space-around'>
+          <Button size='small' className={classes.buttonSubmit} variant='contained' color='primary' type='submit'>
+            Submit
+          </Button>
+          <Button size='small' variant='contained' color='secondary' onClick={clear}>
+            Clear
+          </Button>
+        </Grid>
       </form>
     </Paper>
   );
