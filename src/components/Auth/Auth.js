@@ -89,10 +89,10 @@ export const Auth = () => {
               </>
             )}
           </Grid>
-          <Button type='submit' fullWidth variant='contained' color='primary' className={classes.submit}>
+          <Button type='submit' fullwidth variant='contained' color='primary' className={classes.submit}>
             {isSignUp ? 'Sign Up' : 'Sign In'}
           </Button>
-          <Grid container fullWidth direction='row' justifyContent='center' alignItems='center'>
+          <Grid container fullwidth direction='row' justifyContent='center' alignItems='center'>
             <GoogleLogin
               onSuccess={onSuccess}
               onError={() => {

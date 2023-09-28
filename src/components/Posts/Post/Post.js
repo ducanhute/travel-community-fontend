@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardActions, CardContent, CardMedia, Button, Typography, ButtonBase } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
@@ -11,29 +11,44 @@ import { deletePost, likePost } from '../../../actions/posts';
 import useStyles from './styles';
 import ThumbUpAlt from '@material-ui/icons/ThumbUpAlt';
 import ThumbUpOutlined from '@material-ui/icons/ThumbUpOutlined';
-import posts from '../../../reducers/posts';
 
 const Post = ({ post, setCurrentId }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
   const user = JSON.parse(localStorage.getItem('profile'));
+  const [likes, setLikes] = useState(post?.likes);
+
+  const userId = user?.sub || user?.result?._id;
+
+  const hasLikedPost = post.likes.find((item) => item === userId);
+
+  const handleClickLike = async () => {
+    dispatch(likePost(post._id));
+
+    if (hasLikedPost) {
+      setLikes(post.likes.filter((id) => id !== userId));
+    } else {
+      setLikes([...post.likes, userId]);
+    }
+  };
+
   const Likes = () => {
-    if (post.likes.length > 0) {
-      return post.likes.find((item) => item === user?.sub || item === user?.result?._id) ? (
+    if (likes.length > 0) {
+      return likes.find((item) => item === userId) ? (
         <>
           <ThumbUpAlt />
           &nbsp;
-          {post.likes.length > 2 ? (
-            <span style={{ fontSize: '8px' }}>You and {post.likes.length - 1} others </span>
+          {likes.length > 2 ? (
+            <span style={{ fontSize: '8px' }}>You and {likes.length - 1} others </span>
           ) : (
-            `${post.likes.length} like${post.likes.length > 1 ? 's' : ''}`
+            `${likes.length} like${likes.length > 1 ? 's' : ''}`
           )}
         </>
       ) : (
         <>
           <ThumbUpOutlined />
-          &nbsp; {`${post.likes.length} like${post.likes.length > 1 ? 's' : ''}`}
+          &nbsp; {`${likes.length} like${likes.length > 1 ? 's' : ''}`}
         </>
       );
     }
@@ -43,9 +58,11 @@ const Post = ({ post, setCurrentId }) => {
       </>
     );
   };
+
   const handleCardAction = () => {
     history.push(`/posts/${post._id}`);
   };
+  console.log('render', post.likes);
   return (
     <Card className={classes.card} elevation={3}>
       <div className='wrap-card' onClick={handleCardAction} style={{ cursor: 'pointer' }}>
@@ -87,15 +104,10 @@ const Post = ({ post, setCurrentId }) => {
       </div>
 
       <CardActions className={classes.cardActions}>
-        <Button
-          size='small'
-          color='primary'
-          disabled={!user}
-          onClick={() => {
-            dispatch(likePost(post._id));
-          }}>
-          {Likes()}
+        <Button size='small' color='primary' disabled={!user} onClick={handleClickLike}>
+          <Likes />
         </Button>
+
         {(post.creator === user?.result?._id || post.creator === user?.sub) && (
           <Button
             size='small'
@@ -105,7 +117,7 @@ const Post = ({ post, setCurrentId }) => {
               dispatch(deletePost(post._id));
               setCurrentId(`${post._id}-`);
             }}>
-            <DeleteIcon fontSize='medium' />
+            <DeleteIcon color='secondary' fontSize='medium' />
           </Button>
         )}
       </CardActions>
