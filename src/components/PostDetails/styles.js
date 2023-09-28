@@ -7,6 +7,15 @@ export default makeStyles((theme) => ({
     width: '100%',
     maxHeight: '600px',
   },
+  message: {
+    display: 'block',
+    'text-overflow': 'ellipsis',
+    'word-wrap': 'break-word',
+    overflow: 'hidden',
+    'max-height': '3.6em',
+    'line-height': '1.2em',
+    fontSize: '12px',
+  },
   card: {
     display: 'flex',
     alignItems: 'center',
@@ -53,5 +62,13 @@ export default makeStyles((theme) => ({
     height: '200px',
     overflowY: 'auto',
     marginRight: '30px',
+  },
+  recommendedPosts: {
+    padding: '10px 20px',
+    borderRadius: '20px',
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: '#f0f2f5',
+    },
   },
 }));

@@ -62,7 +62,6 @@ const Post = ({ post, setCurrentId }) => {
   const handleCardAction = () => {
     history.push(`/posts/${post._id}`);
   };
-  console.log('render', post.likes);
   return (
     <Card className={classes.card} elevation={3}>
       <div className='wrap-card' onClick={handleCardAction} style={{ cursor: 'pointer' }}>

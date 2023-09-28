@@ -20,6 +20,7 @@ export default makeStyles((theme) => ({
     },
   },
   heading: {
+    cursor: 'pointer',
     color: 'rgba(0,183,255, 1)',
     textDecoration: 'none',
     fontWeight: 'bold',

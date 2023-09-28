@@ -22,7 +22,6 @@ const Home = () => {
   const classes = useStyles();
   const [search, setSearch] = useState('');
   const [tags, setTags] = useState([]);
-  console.log('page number of home', page);
 
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
@@ -36,7 +35,6 @@ const Home = () => {
   const handleDelete = (tagToDelete) => setTags(tags.filter((tag) => tag !== tagToDelete));
 
   const searchPost = () => {
-    console.log('Check value search', search, tags);
     if (search.trim() || tags) {
       //dispatch logic -> fetch search Posts
       dispatch(fetchPostsBySearch({ search, tags: tags.join(',') })); // ['europe', 'usa'] -> "europe,usa"

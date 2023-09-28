@@ -59,7 +59,6 @@ export const Auth = () => {
     let fieldName = e.target.name;
     setFormData({ ...formData, [fieldName]: e.target.value });
   };
-  console.log('Check profile', profile);
   return (
     <Container component='main' maxWidth='xs'>
       <Paper className={classes.paper} elevation={3}>

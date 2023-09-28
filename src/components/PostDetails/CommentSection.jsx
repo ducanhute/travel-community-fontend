@@ -14,19 +14,22 @@ const CommentSection = ({ post }) => {
     const commentsRef = useRef()
 
     const handleClick = async () => {
-        const finalComment = `${user?.result?.name}: ${comment}`
+        const finalComment = `${user?.result?.name || user?.name}: ${comment}`
         const newComments = await dispatch(commentPost(finalComment, post._id))
 
         setComments(newComments)
         setComment("")
 
-        commentsRef.current.scrollIntoView({ behavior: "smooth" })
+        commentsRef.current.scrollIntoView({
+            behavior: "smooth", block: 'center',
+            inline: 'center'
+        })
     }
 
     return (
         <div>
             <div className={classes.commentsOuterContainer}>
-                <div className={classes.commentsInnerContainer}>
+                <div style={{ width: '50%' }} className={classes.commentsInnerContainer}>
                     <Typography gutterBottom variant="h6">
                         Comments
                     </Typography>
@@ -37,8 +40,8 @@ const CommentSection = ({ post }) => {
                     ))}
                     <div ref={commentsRef}></div>
                 </div>
-                {user?.result?.name &&
-                    <div style={{ width: '70%' }}>
+                {(user?.result?.name || user?.name) &&
+                    <div style={{ width: '50%' }}>
                         <Typography gutterBottom variant="h6">Write a comment</Typography>
                         <TextField
                             fullWidth

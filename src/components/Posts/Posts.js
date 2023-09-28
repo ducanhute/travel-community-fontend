@@ -24,7 +24,7 @@ const Posts = ({ setCurrentId, page }) => {
         </Grid>
       ) : (
         <Grid style={{ height: 'calc(100vh - 140px)', overflowY: 'scroll', overflowX: 'hidden', padding: '0 15px' }} container>
-          <Grid className={classes.mainContainer} container alignItems='stretch' spacing={3}>
+          <Grid className={classes.mainContainer} container spacing={3}>
             {posts.map((post) => (
               <Grid key={post._id} item xs={12} sm={12} md={6} lg={3}>
                 <Post setCurrentId={setCurrentId} post={post} />

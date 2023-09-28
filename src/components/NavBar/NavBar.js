@@ -6,6 +6,7 @@ import decode from 'jwt-decode';
 import logo from '../../images/logo.jpg';
 import useStyles from './styles';
 import { LOGOUT } from '../../constants/actionTypes';
+import { getPosts } from '../../actions/posts';
 const Navbar = () => {
   const classes = useStyles();
   const history = useHistory();
@@ -27,11 +28,13 @@ const Navbar = () => {
     }
     setUser(JSON.parse(localStorage.getItem('profile')));
   }, [location]);
-
+  const handleClickHome = () => {
+    history.push('/');
+  };
   return (
     <AppBar className={classes.appBar} position='static' color='inherit'>
       <div className={classes.brandContainer}>
-        <Typography component={Link} to='/' className={classes.heading} variant='h6' align='center'>
+        <Typography onClick={handleClickHome} className={classes.heading} variant='h6' align='center'>
           Travel Community
           <img className={classes.image} src={logo} alt='Memories' height='60' width='60'></img>
         </Typography>
@@ -48,7 +51,7 @@ const Navbar = () => {
             </Button>
           </div>
         ) : (
-          <Button size='small' component={Link} size='small' className={classes.button} to='/auth' variant='contained' color='primary'>
+          <Button size='small' component={Link} className={classes.button} to='/auth' variant='contained' color='primary'>
             Sign In
           </Button>
         )}

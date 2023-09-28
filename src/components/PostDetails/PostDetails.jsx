@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Paper, Typography, CircularProgress, Divider } from "@material-ui/core";
+import { Paper, Typography, CircularProgress, Divider, Grid } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { useParams, useHistory } from "react-router-dom";
@@ -21,7 +21,7 @@ const PostDetails = () => {
 
     useEffect(() => {
         dispatch(fetchPostsBySearch({ search: "none", tags: post?.tags.join(',') }))
-    }, [id])
+    }, [id, post])
 
     if (!post) return null
 
@@ -30,7 +30,8 @@ const PostDetails = () => {
             <CircularProgress size="7em" />
         </Paper>)
     }
-    const recommendPosts = posts.filter(({ _id }) => _id !== post.id);
+    const recommendPosts = posts.filter(({ _id }) => _id !== post._id);
+    console.log("check recommendedPosts", recommendPosts)
 
     const openPost = (_id) => history.push(`/posts/${_id}`)
 
@@ -52,22 +53,27 @@ const PostDetails = () => {
                 <img className={classes.media} src={post.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'} alt={post.title} />
             </div>
         </div>
-        {recommendPosts.length && (
+        {recommendPosts.length > 0 && (
             <div className={classes.section}>
-                <Typography gutterBottom variant="h5">You might also like: </Typography>
-                <Divider />
-                <div className={classes.recommendedPosts}>
-                    {recommendPosts.map(({ title, message, name, likes, selectedFile, _id }) => (
-                        <Paper evaluation={6} style={{ margin: "20px", cursor: "pointer" }} onClick={() => { openPost(_id) }} key={_id}>
-                            <Typography gutterBottom variant="h6">{title}</Typography>
-                            <Typography gutterBottom variant="subtitle2">{name}</Typography>
-                            <Typography gutterBottom variant="subtitle1">{message}</Typography>
-                            <Typography gutterBottom variant="subtitle1">Likes: {likes.length}</Typography>
-                            <img src={selectedFile} width='200px' />
+                <Typography gutterBottom variant="h6" style={{ fontWeight: "bold" }}> You might also like: </Typography>
+                <Divider style={{ marginBottom: "15px" }} />
 
-                        </Paper>
+                <Grid container spacing={6} >
+                    {recommendPosts.map(({ title, message, name, likes, selectedFile, _id }) => (
+                        <Grid xs={12} md={4} lg={3} item onClick={() => { openPost(_id) }} key={_id}>
+                            <Paper evaluation={9} className={classes.recommendedPosts}>
+                                <Typography gutterBottom variant="h6" style={{ fontWeight: "bold" }}>{title}</Typography>
+                                <Typography gutterBottom variant="subtitle2">Created by: {name}</Typography>
+                                <Typography gutterBottom className={classes.message} variant="subtitle1">{message}</Typography>
+                                <span>...</span>
+                                <Typography gutterBottom variant="subtitle1">Likes: {likes.length}</Typography>
+                                <img src={selectedFile} style={{ width: "100%" }} />
+                            </Paper>
+                        </Grid>
+
                     ))}
-                </div>
+                </Grid>
+
             </div>
         )}
     </Paper>;
