@@ -1,6 +1,6 @@
 import * as api from '../api';
 import { FETCH_POST, FETCH_BY_SEARCH, FETCH_ALL, CREATE, UPDATE, DELETE, START_LOADING, END_LOADING, COMMENT } from '../constants/actionTypes';
-
+import { toast } from 'react-toastify';
 export const getPost = (id) => async (dispatch) => {
   try {
     dispatch({ type: START_LOADING });
@@ -44,6 +44,8 @@ export const createPost = (post) => async (dispatch) => {
 
     dispatch({ type: CREATE, payload: data });
     dispatch({ type: END_LOADING });
+
+    toast.success('Successfully created a new post!');
   } catch (error) {
     console.log(error);
   }
@@ -63,6 +65,8 @@ export const deletePost = (id) => async (dispatch) => {
     const { data } = await api.deletePost(id);
 
     dispatch({ type: DELETE, payload: id });
+
+    toast.success('Deleted post successfully!');
   } catch (error) {
     console.log(error);
   }

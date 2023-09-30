@@ -34,12 +34,18 @@ const CommentSection = ({ post }) => {
                         Comments
                     </Typography>
                     {comments.map((c, i) => (
-                        <Typography key={i} gutterBottom variant="subtitle1">
+                        <Typography key={i} gutterBottom variant="subtitle2">
                             <strong>{c.split(":")[0]}: </strong>{c.split(":")[1]}
                         </Typography>
                     ))}
                     <div ref={commentsRef}></div>
                 </div>
+
+                {!(user?.result?.name || user?.name) &&
+                    <div style={{ width: '50%' }}>
+                        <Typography color="secondary" align="center" gutterBottom variant="h6">Sign in to write a comment!</Typography>
+                    </div>
+                }
                 {(user?.result?.name || user?.name) &&
                     <div style={{ width: '50%' }}>
                         <Typography gutterBottom variant="h6">Write a comment</Typography>

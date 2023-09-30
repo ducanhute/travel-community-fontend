@@ -5,11 +5,11 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useDispatch } from 'react-redux';
 import jwtDecode from 'jwt-decode';
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { signIn, signUp } from '../../actions/auth';
 import { AUTH } from '../../constants/actionTypes';
 import { Input } from './Input';
-import Icon from './icon';
 import useStyle from './styles';
 
 const initilState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' };
@@ -52,6 +52,7 @@ export const Auth = () => {
         token: credentialResponse.credential,
       },
     });
+    toast.success('Sign in successfully!');
     history.push('/');
   };
   const handleChange = (e) => {
@@ -87,10 +88,10 @@ export const Auth = () => {
               </>
             )}
           </Grid>
-          <Button type='submit' fullwidth variant='contained' color='primary' className={classes.submit}>
+          <Button type='submit' fullWidth variant='contained' color='primary' className={classes.submit}>
             {isSignUp ? 'Sign Up' : 'Sign In'}
           </Button>
-          <Grid container fullwidth direction='row' justifyContent='center' alignItems='center'>
+          <Grid container fullWidth direction='row' justifyContent='center' alignItems='center'>
             <GoogleLogin
               onSuccess={onSuccess}
               onError={() => {

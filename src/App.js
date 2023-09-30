@@ -1,6 +1,8 @@
 import { Container } from '@material-ui/core';
 import React from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import PostDetails from './components/PostDetails/PostDetails';
 import { Auth } from './components/Auth/Auth';
@@ -18,6 +20,18 @@ const App = () => {
           <Route path='/posts/:id' exact component={PostDetails} />
           <Route path='/auth' exact component={Auth} />
         </Switch>
+        <ToastContainer
+          position='top-right'
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme='colored'
+        />
       </Container>
     </BrowserRouter>
   );

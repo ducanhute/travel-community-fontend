@@ -5,6 +5,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import $ from 'jquery';
 
 import { deletePost, likePost } from '../../../actions/posts';
 
@@ -59,8 +60,10 @@ const Post = ({ post, setCurrentId }) => {
     );
   };
 
-  const handleCardAction = () => {
-    history.push(`/posts/${post._id}`);
+  const handleCardAction = (e) => {
+    if (!$(e.target).closest('#edit-btn').length) {
+      history.push(`/posts/${post._id}`);
+    }
   };
   return (
     <Card className={classes.card} elevation={3}>
@@ -72,10 +75,10 @@ const Post = ({ post, setCurrentId }) => {
             {moment(post.createdAt).fromNow()}
           </Typography>
         </div>
-        <div className={classes.overlay2}>
+        <div id='edit-btn' className={classes.overlay2}>
           {(post.creator === user?.sub || post.creator === user?.result?._id) && (
             <Button
-              style={{ color: 'white' }}
+              style={{ color: 'white', zIndex: '100' }}
               size='small'
               onClick={() => {
                 return setCurrentId(post._id);
