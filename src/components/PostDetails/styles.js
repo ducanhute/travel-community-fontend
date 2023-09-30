@@ -40,12 +40,12 @@ export default makeStyles((theme) => ({
       with: '100%',
     },
   },
-  recommendedPosts: {
-    display: 'flex',
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
-    },
-  },
+  // recommendedPosts: {
+  //   display: 'flex',
+  //   [theme.breakpoints.down('sm')]: {
+  //     flexDirection: 'column',
+  //   },
+  // },
   loadingPaper: {
     display: 'flex',
     justifyContent: 'center',

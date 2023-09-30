@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Avatar, Button, Container, Grid, Paper, Typography } from '@material-ui/core';
 import LockOutLinedIcon from '@material-ui/icons/LockOutlined';
-import { useGoogleLogin, GoogleLogin, useGoogleOneTapLogin } from '@react-oauth/google';
+import { GoogleLogin } from '@react-oauth/google';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import { useHistory } from 'react-router-dom';
 

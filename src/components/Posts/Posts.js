@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Grid, CircularProgress, Typography, Divider } from '@material-ui/core';
+import React from 'react';
+import { Grid, CircularProgress, Typography } from '@material-ui/core';
 import Post from './Post/Post';
 import useStyles from './styles';
 import Paginate from '../Pagination';
